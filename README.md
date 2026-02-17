@@ -168,6 +168,44 @@ ai-crew-engineering-team/
 
 ---
 
+## Related CrewAI Projects
+
+| Project | Description | Link |
+|--------|-------------|------|
+| **ai-crew-financial-researcher** | Two-agent pipeline: a Researcher gathers company data via web search, and an Analyst synthesizes it into a markdown report. Uses Serper for real-time financial data. | [GitHub](https://github.com/aditya-caltechie/ai-crew-financial-researcher) |
+| **ai-crew-stock-picker** | Hierarchical multi-agent system: a Manager delegates to worker agents that find trending companies, research each, and recommend the best investment. Uses Serper, Pushover, RAG + SQLite, and Pydantic. | [GitHub](https://github.com/aditya-caltechie/ai-crew-stock-picker) |
+
+### ai-crew-financial-researcher
+
+A multi-agent application that performs financial research and reporting on companies. The **Researcher** agent uses web search (SerperDevTool) to gather status, performance, news, and outlook; the **Analyst** agent receives that context and writes a polished markdown report. Sequential flow, config-driven, supports multiple LLMs (e.g. OpenAI for research, Groq for analysis).
+
+### ai-crew-stock-picker
+
+StockPicker uses a **hierarchical process**: a Manager agent delegates tasks to worker agents. It finds 2–3 trending companies in a sector, researches each in depth, picks the best one, and optionally sends a push notification. Features include Pydantic for structured outputs, RAG + SQLite for memory, Serper for search, and Pushover for notifications.
+
+---
+
+## Comparison: All Three CrewAI Projects
+
+| Aspect | ai-crew-financial-researcher | ai-crew-stock-picker | ai-crew-engineering-team *(this project)* |
+|--------|------------------------------|----------------------|-------------------------------------------|
+| **Process** | Sequential (2 tasks) | Hierarchical (Manager → workers) | Sequential (4 tasks) |
+| **Agents** | 2 (Researcher, Analyst) | Manager + worker agents | 4 (Engineering Lead, Backend, Frontend, Test Engineer) |
+| **Input** | Company name | Sector, date | Natural language requirements, module name, class name |
+| **Output** | Markdown report | Best stock pick, push notification | Design doc, Python backend, Gradio UI, unit tests |
+| **Tools** | SerperDevTool (web search) | Serper, Pushover, RAG + SQLite | Code Interpreter (Docker) |
+| **External APIs** | Serper | Serper, Pushover | None (code-only) |
+| **Code execution** | No | No | Yes (Docker sandbox) |
+| **Use case** | Research & reporting | Investment recommendation | Automated software development |
+
+**Pipeline summary**
+
+- **Financial Researcher** — Search → Research document → Report. Good for learning sequential flows and web search integration.
+- **Stock Picker** — Manager delegates: find trending → research each → pick best. Demonstrates hierarchical orchestration, memory, and notifications.
+- **Engineering Team** — Design → Code → UI → Tests. Automates the full software development lifecycle with code generation and execution.
+
+---
+
 ## License
 
 See repository for license details.
