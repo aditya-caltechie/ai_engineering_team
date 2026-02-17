@@ -32,7 +32,7 @@ class EngineeringTeam():
     def frontend_engineer(self) -> Agent:
         return Agent(
             config=self.agents_config['frontend_engineer'],
-            verbose=True,
+            verbose=True, # Imp: Note we are not using code execution for the frontend engineer, because that would launch gradio UI in docker container, which is not desired.
         )
     
     @agent
@@ -40,7 +40,7 @@ class EngineeringTeam():
         return Agent(
             config=self.agents_config['test_engineer'],
             verbose=True,
-            allow_code_execution=True, # Uses Docker for safety
+            allow_code_execution=True, # Uses Docker for safety.  Sure we want to run tests in docker container. 
             code_execution_mode="safe",
             max_execution_time=500,
             max_retry_limit=3,
