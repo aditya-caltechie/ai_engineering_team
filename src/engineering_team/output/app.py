@@ -50,61 +50,24 @@ def report_transactions():
         return account.report_transactions()
     return "No account created."
 
-iface = gr.Interface(
-    fn=create_account,
-    inputs=["text", "number"],
-    outputs="text",
-    title="Trading Account Management",
-    description="Create an account and manage deposits, withdrawals, and shares."
+iface = gr.TabbedInterface(
+    [
+        gr.Interface(
+            fn=create_account,
+            inputs=["text", "number"],
+            outputs="text",
+            title="Trading Account Management",
+            description="Create an account and manage deposits, withdrawals, and shares."
+        ),
+        gr.Interface(fn=deposit, inputs="number", outputs="text", title="Deposit Funds"),
+        gr.Interface(fn=withdraw, inputs="number", outputs="text", title="Withdraw Funds"),
+        gr.Interface(fn=buy_shares, inputs=["text", "number"], outputs="text", title="Buy Shares"),
+        gr.Interface(fn=sell_shares, inputs=["text", "number"], outputs="text", title="Sell Shares"),
+        gr.Interface(fn=report_holdings, inputs=None, outputs="json", title="Report Holdings"),
+        gr.Interface(fn=report_value, inputs=None, outputs="text", title="Report Portfolio Value"),
+        gr.Interface(fn=report_transactions, inputs=None, outputs="json", title="Report Transactions"),
+    ],
+    tab_names=["Create Account", "Deposit", "Withdraw", "Buy Shares", "Sell Shares", "Holdings", "Portfolio Value", "Transactions"],
 )
-
-iface.add_component(gr.Interface(
-    fn=deposit,
-    inputs="number",
-    outputs="text",
-    title="Deposit Funds"
-))
-
-iface.add_component(gr.Interface(
-    fn=withdraw,
-    inputs="number",
-    outputs="text",
-    title="Withdraw Funds"
-))
-
-iface.add_component(gr.Interface(
-    fn=buy_shares,
-    inputs=["text", "number"],
-    outputs="text",
-    title="Buy Shares"
-))
-
-iface.add_component(gr.Interface(
-    fn=sell_shares,
-    inputs=["text", "number"],
-    outputs="text",
-    title="Sell Shares"
-))
-
-iface.add_component(gr.Interface(
-    fn=report_holdings,
-    inputs=None,
-    outputs="json",
-    title="Report Holdings"
-))
-
-iface.add_component(gr.Interface(
-    fn=report_value,
-    inputs=None,
-    outputs="text",
-    title="Report Portfolio Value"
-))
-
-iface.add_component(gr.Interface(
-    fn=report_transactions,
-    inputs=None,
-    outputs="json",
-    title="Report Transactions"
-))
 
 iface.launch()
