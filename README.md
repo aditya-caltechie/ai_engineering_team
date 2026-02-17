@@ -1,4 +1,4 @@
-# AI Crew Engineering Team
+# Engineering Team
 
 > An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests — built with [CrewAI](https://crewai.com/).
 
@@ -99,8 +99,15 @@ The **Backend Engineer** and **Test Engineer** agents use CrewAI’s **Code Inte
 
 ```bash
 cd src/engineering_team
-uv sync
-uv run engineering_team
+crewai install
+crewai run
+```
+
+Or with uv:
+
+```bash
+cd src/engineering_team
+uv sync && uv run engineering_team
 ```
 
 ### Customize inputs

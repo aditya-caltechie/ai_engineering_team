@@ -187,28 +187,29 @@ The crew and entry point live in `src/engineering_team`. Run from that directory
 
 ```bash
 cd src/engineering_team
-uv sync   # or: pip install -e .
-uv run engineering_team
-# or
-uv run run_crew
-# or
-uv run python -m engineering_team.main
+crewai install
+crewai run
+```
+
+Or with uv:
+
+```bash
+cd src/engineering_team
+uv sync
+uv run engineering_team  # or: uv run run_crew
 ```
 
 ### 5.3 From repo root
 
-Install and run with the package path:
+```bash
+cd src/engineering_team && crewai install && crewai run
+```
+
+Or with uv:
 
 ```bash
 uv sync
 cd src/engineering_team && uv run engineering_team
-```
-
-Or with `PYTHONPATH` so the `engineering_team` package is importable:
-
-```bash
-export PYTHONPATH="src/engineering_team/src:$PYTHONPATH"
-uv run python -c "from engineering_team.main import run; run()"
 ```
 
 ### 5.4 Environment

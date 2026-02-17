@@ -306,9 +306,15 @@ Use this when modifying or extending the crew:
 
 ```bash
 cd src/engineering_team
-uv sync
-uv run engineering_team
-# or: uv run run_crew
+crewai install
+crewai run
+```
+
+Or with uv:
+
+```bash
+cd src/engineering_team
+uv sync && uv run engineering_team
 ```
 
 Ensure `.env` has required API keys (e.g. `OPENAI_API_KEY`). See [architecture.md](./architecture.md) for full run instructions.
