@@ -162,6 +162,7 @@ ai-crew-engineering-team/
 
 ## Documentation
 
+- [AGENTS.md](AGENTS.md) — Contributor map: layout, components, run commands  
 - [Demo](docs/demo.md) — How to run the code, console output walkthrough, and pipeline flow  
 - [Architecture](docs/architecture.md) — Flow diagrams, pipelines, and run options  
 - [Developers Guide](docs/developers_guide.md) — How to modify agents, tasks, and extend the crew  
