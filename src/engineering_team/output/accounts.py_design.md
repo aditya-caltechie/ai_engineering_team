@@ -1,69 +1,84 @@
 ```markdown
-# Detailed Design for `accounts.py` Module
+# Module: accounts.py
 
-The `accounts.py` module is a self-contained Python module designed to manage user accounts on a trading simulation platform. The module consists of an `Account` class that provides all necessary functionality for account management including creating an account, managing funds, recording share transactions, and generating various reports.
+This module will contain a single class `Account` which will encapsulate the functionality for managing a user's trading account in a simulated trading platform. It will handle account creation, fund management, trading of shares, reporting, and validation of operations to ensure the account remains valid.
 
-## Functions and Methods
+## Class: Account
 
-### External Function
+### Attributes:
 
-- `get_share_price(symbol: str) -> float`  
-  An external function accessible by the module to get the current price of a share. In production, this would likely query an API or database, but for testing, it returns fixed prices for AAPL, TSLA, and GOOGL.
+- `username: str` - The username of the account holder.
+- `balance: float` - The available cash balance in the account.
+- `initial_deposit: float` - The initial deposit amount used to calculate profit/loss.
+- `portfolio: Dict[str, int]` - A dictionary to hold share symbol as key and quantity as value.
+- `transactions: List[Dict[str, Any]]` - A list to record all account transactions.
 
-### Class: `Account`
+### Methods:
 
-The `Account` class encapsulates all functionality related to managing a user's trading account.
+#### `__init__(self, username: str, initial_deposit: float) -> None`
+- Initialize a new account with a username and an initial deposit amount.
+- Set the balance equal to the initial deposit.
+- Initialize an empty portfolio and an empty transaction list.
 
-#### Attributes:
+#### `deposit(self, amount: float) -> None`
+- Add the specified amount to the account balance.
+- Record the transaction.
 
-- `username: str` — The username of the account holder.
-- `initial_deposit: float` — The initial amount deposited in the account.
-- `balance: float` — The current cash balance of the account.
-- `holdings: Dict[str, int]` — A dictionary mapping share symbols to quantities owned.
-- `transactions: List[Dict]` — A list of transaction records.
+#### `withdraw(self, amount: float) -> bool`
+- Check if the withdrawal amount is less than or equal to the balance.
+- If valid, subtract the amount from the balance and record the transaction.
+- Return `True` if successful, `False` otherwise.
 
-#### Methods:
+#### `buy_shares(self, symbol: str, quantity: int) -> bool`
+- Fetch the current share price using `get_share_price(symbol)`.
+- Calculate the total cost for the quantity of shares.
+- Check if the balance can cover the cost.
+- If valid, deduct the cost from the balance, increase the portfolio quantity, and record the transaction.
+- Return `True` if successful, `False` otherwise.
 
-- `__init__(self, username: str, initial_deposit: float) -> None`  
-  Initializes a new account with the given username and initial deposit.
+#### `sell_shares(self, symbol: str, quantity: int) -> bool`
+- Check if the portfolio has enough quantity of the symbol to sell.
+- If valid, fetch the current share price using `get_share_price(symbol)`.
+- Calculate the total earning from the sale, add it to the balance, decrease the portfolio quantity, and record the transaction.
+- Return `True` if successful, `False` otherwise.
 
-- `deposit_funds(self, amount: float) -> None`  
-  Adds the specified amount to the account balance.
+#### `calculate_portfolio_value(self) -> float`
+- Calculate the total value of the portfolio by iterating over all shares in the portfolio, fetching their current prices using `get_share_price(symbol)`, and summing the total value.
+- Return the calculated portfolio value.
 
-- `withdraw_funds(self, amount: float) -> bool`  
-  Attempts to withdraw the specified amount from the account balance. Returns `True` if successful, `False` otherwise.
+#### `calculate_profit_loss(self) -> float`
+- Calculate the profit or loss by subtracting the initial deposit from the sum of the current balance and portfolio value.
+- Return the profit or loss amount.
 
-- `buy_shares(self, symbol: str, quantity: int) -> bool`  
-  Attempts to buy the specified quantity of shares. Returns `True` if the transaction is successful, `False` if funds are insufficient.
+#### `get_holdings(self) -> Dict[str, int]`
+- Return a copy of the portfolio showing the share symbol and their respective holdings.
 
-- `sell_shares(self, symbol: str, quantity: int) -> bool`  
-  Attempts to sell the specified quantity of shares. Returns `True` if the transaction is successful, `False` if shares are insufficient.
+#### `get_profit_loss(self) -> float`
+- Wrapper method for `calculate_profit_loss` to return current profit or loss.
 
-- `calculate_portfolio_value(self) -> float`  
-  Returns the total value of the portfolio including the cash balance.
+#### `list_transactions(self) -> List[Dict[str, Any]]`
+- Return the transaction history list showing all past transactions with details.
 
-- `calculate_profit_loss(self) -> float`  
-  Calculates and returns the profit or loss from the initial deposit.
+## Example of Usage:
 
-- `report_holdings(self) -> Dict[str, int]`  
-  Returns the current holdings of the user as a dictionary.
+Assuming `get_share_price(symbol)` is implemented elsewhere and accessible.
 
-- `report_transactions(self) -> List[Dict]`  
-  Returns a list of all transactions made by the user.
+```python
+def get_share_price(symbol: str) -> float:
+    test_prices = {"AAPL": 150.0, "TSLA": 700.0, "GOOGL": 2800.0}
+    return test_prices.get(symbol, 0.0)
 
-### Internal (Helper) Methods:
+# Example Usage
+account = Account(username="trader01", initial_deposit=1000.0)
+account.deposit(500.0)
+account.withdraw(200.0)
+account.buy_shares("AAPL", 2)
+account.sell_shares("AAPL", 1)
 
-- `_create_transaction(self, type: str, symbol: str = '', quantity: int = 0, amount: float = 0.0) -> None`  
-  Creates a transaction record and appends it to the transactions list.
-
-- `_calculate_value_of_holdings(self) -> float`  
-  Helper method to calculate the total value of all shares currently held, based on current share prices.
-
-### Constraints
-
-- The `withdraw_funds` method will not allow the withdrawal if it results in a negative balance.
-- The `buy_shares` method checks if the available funds are sufficient before executing a purchase.
-- The `sell_shares` method checks if the user holds a sufficient quantity of shares before selling.
-
-This design outlines the structure and functionality of the account management system, ready for implementation in `accounts.py`.
+print(account.get_holdings())  # Shows current holdings
+print(account.get_profit_loss())  # Shows current profit or loss
+print(account.list_transactions())  # Shows all transactions
 ```
+```
+
+This design encapsulates all required functionalities in a single `Account` class within the module `accounts.py` as specified. Each method is intended to perform a discrete action or report on the account's state, ensuring encapsulation and facilitating unit testing or integration into a larger application context.

@@ -1,64 +1,67 @@
 class Account:
     def __init__(self, username: str, initial_deposit: float) -> None:
         self.username = username
-        self.initial_deposit = initial_deposit
         self.balance = initial_deposit
-        self.holdings = {}
+        self.initial_deposit = initial_deposit
+        self.portfolio = {}
         self.transactions = []
 
-    def deposit_funds(self, amount: float) -> None:
+    def deposit(self, amount: float) -> None:
         self.balance += amount
-        self._create_transaction('deposit', amount=amount)
+        self.transactions.append({'type': 'deposit', 'amount': amount})
 
-    def withdraw_funds(self, amount: float) -> bool:
+    def withdraw(self, amount: float) -> bool:
         if amount <= self.balance:
             self.balance -= amount
-            self._create_transaction('withdraw', amount=amount)
+            self.transactions.append({'type': 'withdraw', 'amount': amount})
             return True
         return False
 
     def buy_shares(self, symbol: str, quantity: int) -> bool:
-        total_cost = get_share_price(symbol) * quantity
+        share_price = get_share_price(symbol)
+        total_cost = share_price * quantity
         if total_cost <= self.balance:
             self.balance -= total_cost
-            if symbol in self.holdings:
-                self.holdings[symbol] += quantity
+            if symbol in self.portfolio:
+                self.portfolio[symbol] += quantity
             else:
-                self.holdings[symbol] = quantity
-            self._create_transaction('buy', symbol=symbol, quantity=quantity, amount=total_cost)
+                self.portfolio[symbol] = quantity
+            self.transactions.append({'type': 'buy', 'symbol': symbol, 'quantity': quantity, 'cost': total_cost})
             return True
         return False
 
     def sell_shares(self, symbol: str, quantity: int) -> bool:
-        if symbol in self.holdings and self.holdings[symbol] >= quantity:
-            total_income = get_share_price(symbol) * quantity
-            self.holdings[symbol] -= quantity
-            if self.holdings[symbol] == 0:
-                del self.holdings[symbol]
-            self.balance += total_income
-            self._create_transaction('sell', symbol=symbol, quantity=quantity, amount=total_income)
+        if symbol in self.portfolio and self.portfolio[symbol] >= quantity:
+            share_price = get_share_price(symbol)
+            total_earning = share_price * quantity
+            self.balance += total_earning
+            self.portfolio[symbol] -= quantity
+            if self.portfolio[symbol] == 0:
+                del self.portfolio[symbol]
+            self.transactions.append({'type': 'sell', 'symbol': symbol, 'quantity': quantity, 'earning': total_earning})
             return True
         return False
 
     def calculate_portfolio_value(self) -> float:
-        return self.balance + self._calculate_value_of_holdings()
+        total_value = 0.0
+        for symbol, quantity in self.portfolio.items():
+            total_value += get_share_price(symbol) * quantity
+        return total_value
 
     def calculate_profit_loss(self) -> float:
-        return self.calculate_portfolio_value() - self.initial_deposit
+        return (self.balance + self.calculate_portfolio_value()) - self.initial_deposit
 
-    def report_holdings(self) -> dict:
-        return self.holdings
+    def get_holdings(self) -> dict:
+        return self.portfolio.copy()
 
-    def report_transactions(self) -> list:
-        return self.transactions
+    def get_profit_loss(self) -> float:
+        return self.calculate_profit_loss()
 
-    def _create_transaction(self, type: str, symbol: str = '', quantity: int = 0, amount: float = 0.0) -> None:
-        self.transactions.append({'type': type, 'symbol': symbol, 'quantity': quantity, 'amount': amount})
-
-    def _calculate_value_of_holdings(self) -> float:
-        return sum(get_share_price(symbol) * quantity for symbol, quantity in self.holdings.items())
+    def list_transactions(self) -> list:
+        return self.transactions.copy()
 
 
 def get_share_price(symbol: str) -> float:
-    prices = {'AAPL': 150.0, 'TSLA': 700.0, 'GOOGL': 2800.0}
-    return prices.get(symbol, 0.0)
+    # Test prices for shares
+    test_prices = {'AAPL': 150.0, 'TSLA': 700.0, 'GOOGL': 2800.0}
+    return test_prices.get(symbol, 0.0)
