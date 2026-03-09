@@ -208,7 +208,6 @@ StockPicker uses a **hierarchical process**: a Manager agent delegates tasks to 
 ---
 
 ## Reference:
-- https://github.com/aditya-caltechie/ai-tutorial-notes
 - https://github.com/aditya-caltechie/ai-crew-financial-researcher
 - https://github.com/aditya-caltechie/ai-crew-stock-picker
 
