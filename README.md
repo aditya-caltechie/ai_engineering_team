@@ -45,10 +45,10 @@ flowchart LR
     end
 
     subgraph Outputs
-        O1[{module}_design.md]
-        O2[{module}.py]
-        O3[app.py]
-        O4[test_{module}.py]
+        O1["{module_name}_design.md"]
+        O2["{module_name}"]
+        O3["app.py"]
+        O4["test_{module_name}"]
     end
 
     Inputs --> A1
@@ -164,12 +164,4 @@ ai_engineering_team/
 - **Docker errors / code execution fails**: ensure Docker Desktop is installed and running. The Backend and Test agents execute code in Docker for isolation.
 - **Missing API key**: set `OPENAI_API_KEY` (or the provider key you configured in `agents.yaml`).
 - **Run fails from repo root**: run from `src/engineering_team/` (this is the CrewAI project root).
-
----
-
-## Documentation
-
-- `AGENTS.md`: contributor-oriented map of the repo
-- `docs/architecture.md`: more detailed diagrams and run options
-- `docs/developers_guide.md`: how to extend agents/tasks and customize the crew
 
