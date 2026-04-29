@@ -2,16 +2,7 @@
 
 [![CI](https://github.com/aditya-caltechie/ai-crew-engineering-team/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aditya-caltechie/ai-crew-engineering-team/actions)
 
-> An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests — built with [CrewAI](https://crewai.com/).
-
-An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests — built with [CrewAI](https://crewai.com/).
-
-
----
-
-## Summary
-
-**AI Crew Engineering Team** is a multi-agent pipeline that automates software development from requirements to delivery. You provide high-level requirements (what the system should do), a target module name, and a class name. The crew designs the solution, implements it in Python, builds a Gradio demo UI, and writes unit tests — all in one run.
+An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests — built with [CrewAI](https://crewai.com/). It is a multi-agent pipeline that automates software development from requirements to delivery. You provide high-level requirements (what the system should do), a target module name, and a class name. The crew designs the solution, implements it in Python, builds a Gradio demo UI, and writes unit tests — all in one run.
 
 The pipeline uses **CrewAI** with four specialized agents that collaborate sequentially. Code execution runs inside **Docker** for safety and isolation.
 
