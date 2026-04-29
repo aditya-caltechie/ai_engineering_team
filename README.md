@@ -1,5 +1,7 @@
 # Engineering Team
 
+[![CI](https://github.com/aditya-caltechie/ai-crew-engineering-team/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aditya-caltechie/ai-crew-engineering-team/actions)
+
 > An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests — built with [CrewAI](https://crewai.com/).
 
 ---
