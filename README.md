@@ -4,6 +4,9 @@
 
 > An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests — built with [CrewAI](https://crewai.com/).
 
+An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests — built with [CrewAI](https://crewai.com/).
+
+
 ---
 
 ## Summary
@@ -209,6 +212,7 @@ StockPicker uses a **hierarchical process**: a Manager agent delegates tasks to 
 
 ---
 
-## License
+## Reference:
+- https://github.com/aditya-caltechie/ai-crew-financial-researcher
+- https://github.com/aditya-caltechie/ai-crew-stock-picker
 
-See repository for license details.
