@@ -1,23 +1,33 @@
-# Engineering Team
+# AI Engineering Team
 
-[![CI](https://github.com/aditya-caltechie/ai-crew-engineering-team/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aditya-caltechie/ai-crew-engineering-team/actions)
+[![CI](https://github.com/aditya-caltechie/ai_engineering_team/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aditya-caltechie/ai_engineering_team/actions/workflows/ci.yml)
 
-An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests — built with [CrewAI](https://crewai.com/). It is a multi-agent pipeline that automates software development from requirements to delivery. You provide high-level requirements (what the system should do), a target module name, and a class name. The crew designs the solution, implements it in Python, builds a Gradio demo UI, and writes unit tests — all in one run.
+An AI-powered engineering crew that turns **natural language requirements** into:
+- a short design document
+- a Python backend module
+- a Gradio demo UI
+- unit tests
 
-The pipeline uses **CrewAI** with four specialized agents that collaborate sequentially. Code execution runs inside **Docker** for safety and isolation.
-
----
-
-## Objective
-
-- **Automate** the design → code → UI → tests workflow for self-contained Python modules  
-- **Reduce** manual work for prototyping and demos  
-- **Showcase** CrewAI multi-agent orchestration with sequential tasks and context passing  
-- **Produce** runnable outputs: a backend module, Gradio `app.py`, and tests under a single `output/` directory  
+Built with [CrewAI](https://crewai.com/) and orchestrated as a **sequential, multi-agent** pipeline. Agents that execute code run inside **Docker** for isolation.
 
 ---
 
-## High-Level Architecture
+## What it generates
+
+Given:
+- **requirements**: what you want to build (plain English)
+- **module_name**: e.g. `accounts.py`
+- **class_name**: e.g. `Account`
+
+The crew writes the following under `src/engineering_team/output/`:
+- `{module_name}_design.md`
+- `{module_name}`
+- `app.py`
+- `test_{module_name}`
+
+---
+
+## Architecture (high-level)
 
 ```mermaid
 flowchart LR
@@ -28,17 +38,17 @@ flowchart LR
     end
 
     subgraph Crew["Crew (Sequential)"]
-        A1[Design]
-        A2[Code]
-        A3[Frontend]
-        A4[Tests]
+        A1[Engineering Lead: Design]
+        A2[Backend Engineer: Implement]
+        A3[Frontend Engineer: UI]
+        A4[Test Engineer: Tests]
     end
 
     subgraph Outputs
-        O1[design.md]
-        O2[backend.py]
+        O1[{module}_design.md]
+        O2[{module}.py]
         O3[app.py]
-        O4[test_*.py]
+        O4[test_{module}.py]
     end
 
     Inputs --> A1
@@ -51,90 +61,83 @@ flowchart LR
     A4 --> O4
 ```
 
-| Step | Agent | Output |
-|------|-------|--------|
-| 1 | Engineering Lead | Design doc (Markdown) |
-| 2 | Backend Engineer | Python backend module |
-| 3 | Frontend Engineer | Gradio `app.py` |
-| 4 | Test Engineer | Unit tests |
-
----
-
-## CrewAI Basics
-
-- **Agents** — LLM-powered roles (e.g. Engineering Lead, Backend Engineer) with a role, goal, and backstory.  
-- **Tasks** — Work items assigned to agents; each task has a description, expected output, and optional context from earlier tasks.  
-- **Crew** — A group of agents and tasks orchestrated by a process (here: `sequential`).  
-- **Context chain** — Later tasks receive earlier task outputs (e.g. design → code; code → frontend & tests).
-
-The crew is configured in `config/agents.yaml` and `config/tasks.yaml`, and assembled in `crew.py`.
-
----
-
-## Code Execution in Docker
-
-The **Backend Engineer** and **Test Engineer** agents use CrewAI’s **Code Interpreter** to write and run Python code. For safety:
-
-- Code runs in **Docker** (`code_execution_mode="safe"`).  
-- Execution is sandboxed; time and retries are limited (e.g. 500s timeout, 3 retries).
-
-**Requirement:** [Docker](https://www.docker.com/products/docker-desktop/) must be installed and running. On macOS with Docker Desktop, the project sets `DOCKER_HOST` automatically when needed.
-
 ---
 
 ## Quick Start
-
 ### Prerequisites
 
-- Python 3.10–3.12  
-- [uv](https://docs.astral.sh/uv/) (or `pip`)  
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for code execution)  
-- API keys for LLMs (e.g. `OPENAI_API_KEY` in `.env`)
+- Python **3.10–3.12**
+- [uv](https://docs.astral.sh/uv/) (recommended) or `pip`
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (required for agents that execute code)
+- An LLM API key in your environment (for example `OPENAI_API_KEY`)
 
-### Run the crew
+### Install dependencies
+
+From the CrewAI project root:
 
 ```bash
 cd src/engineering_team
-crewai install
+uv sync
+```
+
+### Configure environment
+
+Set your API key (shell) or put it in a `.env` file.
+
+```bash
+export OPENAI_API_KEY="..."
+```
+
+### Run
+
+```bash
+cd src/engineering_team
 crewai run
 ```
 
-Or with uv:
+---
 
-```bash
-cd src/engineering_team
-uv sync && uv run engineering_team
-```
+## Configuration
 
-### Customize inputs
+### Customize the generated module
 
-Edit `src/engineering_team/src/engineering_team/main.py` to change:
+Edit `src/engineering_team/src/engineering_team/main.py`:
+- **`requirements`**: natural language spec
+- **`module_name`**: e.g. `accounts.py`
+- **`class_name`**: e.g. `Account`
 
-- `requirements` — Natural language description of the system  
-- `module_name` — Target module file (e.g. `accounts.py`)  
-- `class_name` — Main class name (e.g. `Account`)
+### Where agents and tasks are defined
 
-### Outputs
+- **Agents**: `src/engineering_team/src/engineering_team/config/agents.yaml`
+- **Tasks**: `src/engineering_team/src/engineering_team/config/tasks.yaml`
+- **Crew assembly**: `src/engineering_team/src/engineering_team/crew.py`
 
-Generated files appear under `src/engineering_team/output/`:
+---
 
-| File | Description |
-|------|-------------|
-| `{module}_design.md` | Design document |
-| `{module_name}` | Backend Python module |
-| `app.py` | Gradio demo UI |
-| `test_{module_name}` | Unit tests |
+## Outputs
+
+After a successful run, generated artifacts are written to:
+
+`src/engineering_team/output/`
+
+Typical files:
+- **Design**: `{module_name}_design.md`
+- **Backend module**: `{module_name}`
+- **Gradio UI**: `app.py`
+- **Unit tests**: `test_{module_name}`
 
 Run the app:
 
 ```bash
-cd src/engineering_team/output && python app.py
+cd src/engineering_team/output
+uv run app.py
 ```
 
 Run tests:
 
 ```bash
-cd src/engineering_team/output && python -m pytest test_accounts.py -v
+cd src/engineering_team/output
+uv run pytest test_accounts.py -v
 ```
 
 ---
@@ -142,68 +145,31 @@ cd src/engineering_team/output && python -m pytest test_accounts.py -v
 ## Project Structure
 
 ```
-ai-crew-engineering-team/
+ai_engineering_team/
 ├── src/engineering_team/
 │   ├── src/engineering_team/
-│   │   ├── config/           # agents.yaml, tasks.yaml
-│   │   ├── crew.py           # Crew definition
-│   │   └── main.py           # Entry point & inputs
-│   └── output/               # Generated design, module, app, tests
+│   │   ├── config/                 # agents.yaml, tasks.yaml
+│   │   ├── crew.py                 # Crew definition
+│   │   └── main.py                 # Entry point & inputs
+│   └── output/                     # Generated design, module, app, tests
 └── docs/
-    ├── architecture.md       # Detailed architecture & diagrams
-    └── developers_guide.md   # Implementation & extension guide
+    ├── architecture.md             # More detailed diagrams/notes
+    └── developers_guide.md         # How to extend the crew
 ```
+
+---
+
+## Troubleshooting
+
+- **Docker errors / code execution fails**: ensure Docker Desktop is installed and running. The Backend and Test agents execute code in Docker for isolation.
+- **Missing API key**: set `OPENAI_API_KEY` (or the provider key you configured in `agents.yaml`).
+- **Run fails from repo root**: run from `src/engineering_team/` (this is the CrewAI project root).
 
 ---
 
 ## Documentation
 
-- [AGENTS.md](AGENTS.md) — Contributor map: layout, components, run commands  
-- [Demo](docs/demo.md) — How to run the code, console output walkthrough, and pipeline flow  
-- [Architecture](docs/architecture.md) — Flow diagrams, pipelines, and run options  
-- [Developers Guide](docs/developers_guide.md) — How to modify agents, tasks, and extend the crew  
-
----
-
-## Related CrewAI Projects
-
-| Project | Description | Link |
-|--------|-------------|------|
-| **ai-crew-financial-researcher** | Two-agent pipeline: a Researcher gathers company data via web search, and an Analyst synthesizes it into a markdown report. Uses Serper for real-time financial data. | [GitHub](https://github.com/aditya-caltechie/ai-crew-financial-researcher) |
-| **ai-crew-stock-picker** | Hierarchical multi-agent system: a Manager delegates to worker agents that find trending companies, research each, and recommend the best investment. Uses Serper, Pushover, RAG + SQLite, and Pydantic. | [GitHub](https://github.com/aditya-caltechie/ai-crew-stock-picker) |
-
-### ai-crew-financial-researcher
-
-A multi-agent application that performs financial research and reporting on companies. The **Researcher** agent uses web search (SerperDevTool) to gather status, performance, news, and outlook; the **Analyst** agent receives that context and writes a polished markdown report. Sequential flow, config-driven, supports multiple LLMs (e.g. OpenAI for research, Groq for analysis).
-
-### ai-crew-stock-picker
-
-StockPicker uses a **hierarchical process**: a Manager agent delegates tasks to worker agents. It finds 2–3 trending companies in a sector, researches each in depth, picks the best one, and optionally sends a push notification. Features include Pydantic for structured outputs, RAG + SQLite for memory, Serper for search, and Pushover for notifications.
-
----
-
-## Comparison: All Three CrewAI Projects
-
-| Aspect | ai-crew-financial-researcher | ai-crew-stock-picker | ai-crew-engineering-team *(this project)* |
-|--------|------------------------------|----------------------|-------------------------------------------|
-| **Process** | Sequential (2 tasks) | Hierarchical (Manager → workers) | Sequential (4 tasks) |
-| **Agents** | 2 (Researcher, Analyst) | Manager + worker agents | 4 (Engineering Lead, Backend, Frontend, Test Engineer) |
-| **Input** | Company name | Sector, date | Natural language requirements, module name, class name |
-| **Output** | Markdown report | Best stock pick, push notification | Design doc, Python backend, Gradio UI, unit tests |
-| **Tools** | SerperDevTool (web search) | Serper, Pushover, RAG + SQLite | Code Interpreter (Docker) |
-| **External APIs** | Serper | Serper, Pushover | None (code-only) |
-| **Code execution** | No | No | Yes (Docker sandbox) |
-| **Use case** | Research & reporting | Investment recommendation | Automated software development |
-
-**Pipeline summary**
-
-- **Financial Researcher** — Search → Research document → Report. Good for learning sequential flows and web search integration.
-- **Stock Picker** — Manager delegates: find trending → research each → pick best. Demonstrates hierarchical orchestration, memory, and notifications.
-- **Engineering Team** — Design → Code → UI → Tests. Automates the full software development lifecycle with code generation and execution.
-
----
-
-## Reference:
-- https://github.com/aditya-caltechie/ai-crew-financial-researcher
-- https://github.com/aditya-caltechie/ai-crew-stock-picker
+- `AGENTS.md`: contributor-oriented map of the repo
+- `docs/architecture.md`: more detailed diagrams and run options
+- `docs/developers_guide.md`: how to extend agents/tasks and customize the crew
 
