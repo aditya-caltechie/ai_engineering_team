@@ -2,28 +2,10 @@
 
 [![CI](https://github.com/aditya-caltechie/ai_engineering_team/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aditya-caltechie/ai_engineering_team/actions/workflows/ci.yml)
 
-An AI-powered engineering crew that turns **natural language requirements** into:
-- a short design document
-- a Python backend module
-- a Gradio demo UI
-- unit tests
+An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests. It is a multi-agent pipeline that automates software development from requirements to delivery. You provide high-level requirements (what the system should do), a target module name, and a class name. The crew designs the solution, implements it in Python, builds a Gradio demo UI, and writes unit tests — all in one run.
 
+The pipeline uses CrewAI with four specialized agents that collaborate sequentially. Code execution runs inside Docker for safety and isolation.
 Built with [CrewAI](https://crewai.com/) and orchestrated as a **sequential, multi-agent** pipeline. Agents that execute code run inside **Docker** for isolation.
-
----
-
-## What it generates
-
-Given:
-- **requirements**: what you want to build (plain English)
-- **module_name**: e.g. `accounts.py`
-- **class_name**: e.g. `Account`
-
-The crew writes the following under `src/engineering_team/output/`:
-- `{module_name}_design.md`
-- `{module_name}`
-- `app.py`
-- `test_{module_name}`
 
 ---
 
