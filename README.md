@@ -2,46 +2,10 @@
 
 [![CI](https://github.com/aditya-caltechie/ai_engineering_team/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aditya-caltechie/ai_engineering_team/actions/workflows/ci.yml)
 
-An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests. It is a multi-agent pipeline that automates software development from requirements to delivery. You provide high-level requirements (what the system should do), a target module name, and a class name. The crew designs the solution, implements it in Python, builds a Gradio demo UI, and writes unit tests — all in one run.
+An AI-powered engineering crew that turns natural language requirements into a designed backend module, implementation, Gradio UI, and unit tests. It is a multi-agent pipeline that **automates software development from requirements to delivery**. You provide high-level requirements (what the system should do), a target module name, and a class name. The crew designs the solution, implements it in Python, builds a Gradio demo UI, and writes unit tests — all in one run.
 
 The pipeline uses CrewAI with four specialized agents that collaborate sequentially. Code execution runs inside Docker for safety and isolation.
 Built with [CrewAI](https://crewai.com/) and orchestrated as a **sequential, multi-agent** pipeline. Agents that execute code run inside **Docker** for isolation.
-
----
-
-## Architecture (high-level)
-
-```mermaid
-flowchart LR
-    subgraph Inputs
-        REQ[Requirements]
-        MOD[module_name]
-        CLS[class_name]
-    end
-
-    subgraph Crew["Crew (Sequential)"]
-        A1[Engineering Lead: Design]
-        A2[Backend Engineer: Implement]
-        A3[Frontend Engineer: UI]
-        A4[Test Engineer: Tests]
-    end
-
-    subgraph Outputs
-        O1["{module_name}_design.md"]
-        O2["{module_name}"]
-        O3["app.py"]
-        O4["test_{module_name}"]
-    end
-
-    Inputs --> A1
-    A1 --> A2
-    A2 --> A3
-    A2 --> A4
-    A1 --> O1
-    A2 --> O2
-    A3 --> O3
-    A4 --> O4
-```
 
 ---
 
